@@ -19,12 +19,14 @@ public class Invisbilidad : MonoBehaviour
     private float cooldownCountdownTimer = 0f;
 
      private string originalTag;
+     private Animator animator;
 
     void Start()
     {
        spriteRenderer = GetComponent<SpriteRenderer>();
         originalOpacity = spriteRenderer.color.a; // 
          originalTag = gameObject.tag;
+         animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -69,6 +71,8 @@ if (isCountingDownInvisibility)
 
             ChangeTag("InvisiblePlayer");
 
+            
+            StartCoroutine(PlayInvisibilityAnimation());
             // Cambia la opacidad del sprite del personaje
             StartCoroutine(ChangeOpacityWithTimer(invisibleOpacity, 5f));
             canBecomeInvisible = false; // Desactiva la capacidad de volverse invisible hasta que se complete el contador
@@ -120,5 +124,21 @@ if (isCountingDownInvisibility)
     void RestoreOriginalTag()
     {
         gameObject.tag = originalTag;
+    }
+
+       IEnumerator PlayInvisibilityAnimation()
+    {
+        // Aquí debes llamar a tu animación de invisibilidad. 
+        // Por ejemplo, si estás usando animaciones de Unity:
+        // GetComponent<Animator>().SetTrigger("Invisibility");
+        animator.SetBool("Invisible", true);
+
+        // Espera hasta que la animación termine
+        yield return new WaitForSeconds(5f); // Cambia 0.5f al tiempo que dure tu animación de invisibilidad
+
+        animator.SetBool("Invisible", false);
+        // Aquí puedes agregar código para volver a la animación original una vez que la invisibilidad haya terminado
+        // Por ejemplo, si estás usando animaciones de Unity:
+        // GetComponent<Animator>().SetTrigger("ReturnToNormal");
     }
 }

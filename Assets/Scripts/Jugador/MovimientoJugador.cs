@@ -32,15 +32,20 @@ public class MovimientoJugador : MonoBehaviour
 
     private bool salto = false;
 
+    private Animator animator;
+
     private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
 
     private void Update()
     {
         movimientoHorizontal = Input.GetAxisRaw("Horizontal") * velocidadMovimiento;
+
+        animator.SetFloat("Horizontal", Mathf.Abs(movimientoHorizontal));
 
         if(Input.GetButtonDown("Jump")){
             salto = true;
@@ -52,6 +57,8 @@ public class MovimientoJugador : MonoBehaviour
     {
 
         enSuelo = Physics2D.OverlapBox(controladorSuelo.position, dimensionesCaja, 0f, esSuelo);
+        animator.SetBool("enSuelo", enSuelo);
+
         Mover(movimientoHorizontal * Time.fixedDeltaTime, salto);
         salto = false;
     }
